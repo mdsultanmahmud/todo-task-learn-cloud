@@ -1,16 +1,32 @@
 import React, { useEffect, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { AiFillEdit } from 'react-icons/ai'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-const DisplayTodo = () => {
+const DisplayTodo = ({prop}) => {
+    const {dataHandle, setDataHandle} = prop
     const [todos, setTodos] = useState({})
     useEffect(() => {
         fetch('http://localhost:5000/getAllTask')
             .then(res => res.json())
             .then(data => setTodos(data))
-    }, [])
-    return (
-        <div className='mx-20 px-20'>
+    }, [dataHandle])
 
+    // handle delete data 
+    const handleDelete = id =>{
+        console.log(id)
+        fetch(`http://localhost:5000/deleteTask/${id}`, {
+            method: 'DELETE'
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.acknowledged){
+                setDataHandle(!dataHandle)
+                toast.success('Data Deleted Successfully!!')
+            }
+        })
+    }
+    return (
+        <div className='mx-20 mb-36 px-20'>
             {
                 todos.length > 0 ? <>
                     <div className='text-center'>
@@ -34,7 +50,7 @@ const DisplayTodo = () => {
                                     todos.map(todo => <tr key={todo._id}>
                                         <th>
                                             <label>
-                                                <input type="checkbox" className="checkbox" />
+                                                <input type="checkbox" className="checkbox" checked = {todo?.isDone}/>
                                             </label>
                                         </th>
                                         <td>
@@ -52,7 +68,7 @@ const DisplayTodo = () => {
                                         <td>{todo.presentDate}</td>
                                         <td>
                                             <button className='p-2 bg-base-300 hover:bg-[#FF5733] mr-2 hover:text-white font-bold'><AiFillEdit size={22} /></button>
-                                            <button className='p-2 bg-base-300 hover:bg-[#FF5733] hover:text-white font-bold'><RiDeleteBin6Line size={22} /></button>
+                                            <button onClick={() => handleDelete(todo._id)} className='p-2 bg-base-300 hover:bg-[#FF5733] hover:text-white font-bold'><RiDeleteBin6Line size={22} /></button>
                                         </td>
                                     </tr>)
                                 }

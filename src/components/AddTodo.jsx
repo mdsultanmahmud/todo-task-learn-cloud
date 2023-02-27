@@ -1,7 +1,8 @@
 import React from 'react';
 import { toast } from 'react-hot-toast';
 import { BiImageAdd } from 'react-icons/bi'
-const AddTodo = () => {
+const AddTodo = ({prop}) => {
+    const {dataHandle, setDataHandle} = prop
     // add a task 
     const addTask = (event) =>{
         event.preventDefault()
@@ -30,6 +31,7 @@ const AddTodo = () => {
         .then(data => {
             if(data.insertedId){
                 toast.success('Added Your Task Successfully!')
+                setDataHandle(!dataHandle)
                 form.reset()
             }
         })
