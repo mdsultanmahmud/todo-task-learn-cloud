@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { AiFillEdit } from 'react-icons/ai'
 import { RiDeleteBin6Line } from 'react-icons/ri'
-const DisplayTodo = ({prop}) => {
-    const {dataHandle, setDataHandle} = prop
+const DisplayTodo = ({ prop }) => {
+    const { dataHandle, setDataHandle } = prop
     const [todos, setTodos] = useState({})
     useEffect(() => {
         fetch('http://localhost:5000/getAllTask')
@@ -12,26 +12,40 @@ const DisplayTodo = ({prop}) => {
     }, [dataHandle])
 
     // handle delete data 
-    const handleDelete = id =>{
-        console.log(id)
+    const handleDelete = id => {
         fetch(`http://localhost:5000/deleteTask/${id}`, {
             method: 'DELETE'
         })
-        .then(res => res.json())
-        .then(data => {
-            if(data.acknowledged){
-                setDataHandle(!dataHandle)
-                toast.success('Data Deleted Successfully!!')
+            .then(res => res.json())
+            .then(data => {
+                if (data.acknowledged) {
+                    setDataHandle(!dataHandle)
+                    toast.success('Data Deleted Successfully!!')
+                }
+            })
+    }
+
+    const handleDone = (id) =>{
+        fetch(`http://localhost:5000/donetask/${id}`, {
+            method: 'PATCH',
+            headers:{
+                'content-type': 'application/json'
             }
         })
+            .then(res => res.json())
+            .then(data => {
+                if (data.acknowledged) {
+                    setDataHandle(!dataHandle)
+                    toast.success('This item is done.')
+                }
+            })
     }
     return (
         <div className='mx-20 mb-36 px-20'>
             {
                 todos.length > 0 ? <>
                     <div className='text-center'>
-                        <button className='px-8 py-4 font-bold bg-[#FF5733] hover:bg-[#6495ED] text-white mr-4'>All Task</button>
-                        <button className='px-8 py-4 font-bold bg-[#FF5733] hover:bg-[#6495ED] text-white'>Done Task</button>
+                        <h1 className='px-8 py-4 font-bold bg-[#6495ED] text-white mr-4'>All Task</h1>
                     </div>
                     <div className="overflow-x-auto w-full mt-12">
                         <table className="table w-full">
@@ -47,10 +61,10 @@ const DisplayTodo = ({prop}) => {
                             <tbody>
                                 {
                                     todos.length > 0 &&
-                                    todos.map(todo => <tr key={todo._id}>
+                                    todos.map(todo => <tr key={todo._id} className='hover'>
                                         <th>
                                             <label>
-                                                <input type="checkbox" className="checkbox" checked = {todo?.isDone}/>
+                                                <input type="checkbox" className="checkbox" onClick={() =>handleDone(todo._id)} checked = {todo.isDone}/>
                                             </label>
                                         </th>
                                         <td>

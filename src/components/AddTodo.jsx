@@ -30,8 +30,8 @@ const AddTodo = ({prop}) => {
         .then(res => res.json())
         .then(data => {
             if(data.insertedId){
-                toast.success('Added Your Task Successfully!')
                 setDataHandle(!dataHandle)
+                toast.success('Added Your Task Successfully!')
                 form.reset()
             }
         })
