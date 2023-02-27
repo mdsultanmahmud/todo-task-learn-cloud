@@ -5,9 +5,12 @@ const AddTodo = () => {
     // add a task 
     const addTask = (event) =>{
         event.preventDefault()
-        const taskName = event.target.task_name.value 
+        const form = event.target
+        const taskName = form.task_name.value 
+        const iconURL = form.icon_url.value 
         const task = {
-            taskName
+            taskName,
+            iconURL
         }
         fetch('http://localhost:5000/addtask', {
             method: 'POST',
@@ -21,6 +24,7 @@ const AddTodo = () => {
         .then(data => {
             if(data.insertedId){
                 toast.success('Added Your Task Successfully!')
+                form.reset()
             }
         })
     }
@@ -30,12 +34,7 @@ const AddTodo = () => {
             <form className='text-center' onSubmit={addTask}>
                 <div className='flex gap-5 items-center justify-center'>
                     <input name='task_name' className='px-4 py-3 outline-none border border-[#FF5733] mr-4 rounded' type="text" placeholder='Enter Your Task Name' required/>
-                    <label htmlFor="file-upload" className='cursor-pointer'>
-                        <div className='flex items-center shadow-lg p-3'>
-                            <BiImageAdd size={22}/>
-                            <span className='font-bold ml-2'>Upload Task Icon</span>
-                        </div>
-                        <input type="file" id="file-upload" hidden/></label>
+                    <input name='icon_url' className='px-4 py-3 outline-none border border-[#FF5733] mr-4 rounded' type="text" placeholder='Enter Icon URL  ' required/>
                     <br />
                 </div>
                 <button className='bg-[#FF5733] px-4 py-3 rounded text-white text-xl font-bold w-1/2 mt-2' type='submit'>Add Task</button>
