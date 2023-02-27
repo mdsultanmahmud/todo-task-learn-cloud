@@ -5,12 +5,18 @@ const AddTodo = () => {
     // add a task 
     const addTask = (event) =>{
         event.preventDefault()
+        const date = new Date()
+        const time= date.toLocaleTimeString()
+        const presentDate = date.toLocaleDateString()
         const form = event.target
         const taskName = form.task_name.value 
         const iconURL = form.icon_url.value 
         const task = {
             taskName,
-            iconURL
+            iconURL,
+            time, 
+            presentDate,
+            isDone: false
         }
         fetch('http://localhost:5000/addtask', {
             method: 'POST',
