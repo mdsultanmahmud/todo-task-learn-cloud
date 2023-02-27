@@ -1,4 +1,7 @@
-:root{
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* :root{
   --primary_color: #1C2833;
   --secondary_color:#F5EEF8 
-}
+} */
