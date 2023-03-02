@@ -42,15 +42,15 @@ const AddTodo = ({prop}) => {
         })
     }
     return (
-        <div className='my-20 mx-20 px-20'>
+        <div className='my-20 mx-20 px-20 w-full mx-auto'>
             <h1 className='text-2xl text-[#FF5733] text-center font-bold mb-6'>Add Your Task</h1>
             <form className='text-center' onSubmit={addTask}>
-                <div className='flex gap-5 items-center justify-center'>
+                <div className='flex flex-col md:flex-row gap-5 items-center justify-center'>
                     <input name='task_name' className='px-4 py-3 outline-none border border-[#FF5733] mr-4 rounded' type="text" placeholder='Enter Your Task Name' required/>
                     <input name='icon_url' className='px-4 py-3 outline-none border border-[#FF5733] mr-4 rounded' type="text" placeholder='Enter Icon URL  ' required/>
                     <br />
                 </div>
-                <button className='bg-[#FF5733] px-4 py-3 rounded text-white text-xl font-bold w-1/2 mt-2' type='submit'>Add Task</button>
+                <button className='bg-[#FF5733] px-4 py-3 rounded text-white text-xl font-bold mt-2' type='submit'>Add Task</button>
             </form>
         </div>
     );
