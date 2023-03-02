@@ -8,13 +8,14 @@ import VisualizationChart from "./components/VisualizationChart"
 
 function App() {
   const [dataHandle, setDataHandle] = useState(false)
+  const [todos, setTodos] = useState({})
   return (
     <div>
       <Navbar></Navbar>
-      <VisualizationChart></VisualizationChart>
-      <AddTodo prop = {{setDataHandle, dataHandle}}></AddTodo>
-      <DisplayTodo prop = {{dataHandle, setDataHandle}}></DisplayTodo>
-      <Toaster/>
+      <VisualizationChart prop = {{todos}}></VisualizationChart>
+      <AddTodo prop={{ setDataHandle, dataHandle }}></AddTodo>
+      <DisplayTodo prop={{ dataHandle, setDataHandle, todos, setTodos }}></DisplayTodo>
+      <Toaster />
     </div>
   )
 }

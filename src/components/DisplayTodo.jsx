@@ -2,14 +2,38 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { AiFillEdit } from 'react-icons/ai'
 import { RiDeleteBin6Line } from 'react-icons/ri'
+import { InfinitySpin } from 'react-loader-spinner'
 const DisplayTodo = ({ prop }) => {
-    const { dataHandle, setDataHandle } = prop
-    const [todos, setTodos] = useState({})
+    const { dataHandle, setDataHandle, todos, setTodos } = prop
+    let [url, setUrl] = useState(`http://localhost:5000/getAllTask`)
+    const handleSelected = (e) => {
+        const today = new Date()
+        const week = Math.ceil((today.getDate() - today.getDay()) / 7)
+        const sortedValue = e.target.value
+        if (sortedValue == 'day') {
+            setUrl(`http://localhost:5000/getAllTask?presentDate=${today.toLocaleDateString()}`)
+        } else if (sortedValue == 'week') {
+            setUrl(`http://localhost:5000/getAllTask?year=${today.getFullYear()}&month=${today.getMonth()}&week=${week}`)
+        } else if (sortedValue == 'year') {
+            setUrl(`http://localhost:5000/getAllTask?year=${today.getFullYear()}`)
+        }
+        else if (sortedValue == 'all') {
+            setUrl(`http://localhost:5000/getAllTask`)
+        }
+        setDataHandle(!dataHandle)
+    }
+
     useEffect(() => {
-        fetch('http://localhost:5000/getAllTask')
+        fetch(url)
             .then(res => res.json())
-            .then(data => setTodos(data))
+            .then(data => {
+                setTodos(data)
+            })
     }, [dataHandle])
+
+
+
+
 
     // handle delete data 
     const handleDelete = id => {
@@ -25,10 +49,10 @@ const DisplayTodo = ({ prop }) => {
             })
     }
 
-    const handleDone = (id) =>{
+    const handleDone = (id) => {
         fetch(`http://localhost:5000/donetask/${id}`, {
             method: 'PATCH',
-            headers:{
+            headers: {
                 'content-type': 'application/json'
             }
         })
@@ -42,6 +66,15 @@ const DisplayTodo = ({ prop }) => {
     }
     return (
         <div className='mx-20 mb-36 px-20'>
+            <div className='absolute top-20 right-5'>
+                <select onChange={handleSelected} className="select select-accent w-full max-w-xs">
+                    <option disabled selected>Data Sort By</option>
+                    <option value={'day'}>Day</option>
+                    <option value={'week'}>Week</option>
+                    <option value={'year'}>Year</option>
+                    <option value={'all'}>All</option>
+                </select>
+            </div>
             {
                 todos.length > 0 ? <>
                     <div className='text-center'>
@@ -61,32 +94,34 @@ const DisplayTodo = ({ prop }) => {
                             <tbody>
                                 {
                                     todos.length > 0 &&
-                                    todos.map(todo => <tr key={todo._id} className='hover'>
-                                        <th>
-                                            <label>
-                                                <input type="checkbox" className="checkbox" onClick={() =>handleDone(todo._id)} checked = {todo.isDone}/>
-                                            </label>
-                                        </th>
-                                        <td>
-                                            <div className="flex items-center space-x-3">
-                                                <div className="avatar">
-                                                    <div className="mask mask-squircle w-12 h-12">
-                                                        <img src={todo.iconURL} alt="Avatar Tailwind CSS Component" />
+                                    todos.map((todo) => (
+
+                                        <tr className='hover' key={todo._id}>
+                                            <th>
+                                                <label>
+                                                    <input disabled={todo?.isDone} type="checkbox" className="checkbox" onClick={() => handleDone(todo._id)} checked={todo.isDone} />
+                                                </label>
+                                            </th>
+                                            <td>
+                                                <div className="flex items-center space-x-3">
+                                                    <div className="avatar">
+                                                        <div className="mask mask-squircle w-12 h-12">
+                                                            <img src={todo.iconURL} alt="Avatar Tailwind CSS Component" />
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <p>{todo.taskName}</p>
-                                        </td>
-                                        <td>{todo.presentDate}</td>
-                                        <td>
-                                            <button className='p-2 bg-base-300 hover:bg-[#FF5733] mr-2 hover:text-white font-bold'><AiFillEdit size={22} /></button>
-                                            <button onClick={() => handleDelete(todo._id)} className='p-2 bg-base-300 hover:bg-[#FF5733] hover:text-white font-bold'><RiDeleteBin6Line size={22} /></button>
-                                        </td>
-                                    </tr>)
+                                            </td>
+                                            <td>
+                                                <p>{todo.taskName}</p>
+                                            </td>
+                                            <td>{todo.presentDate}</td>
+                                            <td>
+                                                <button className='p-2 bg-base-300 hover:bg-[#FF5733] mr-2 hover:text-white font-bold'><AiFillEdit size={22} /></button>
+                                                <button onClick={() => handleDelete(todo._id)} className='p-2 bg-base-300 hover:bg-[#FF5733] hover:text-white font-bold'><RiDeleteBin6Line size={22} /></button>
+                                            </td>
+                                        </tr>
+                                    ))
                                 }
-
                             </tbody>
                         </table>
                     </div>

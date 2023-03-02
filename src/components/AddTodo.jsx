@@ -6,18 +6,23 @@ const AddTodo = ({prop}) => {
     // add a task 
     const addTask = (event) =>{
         event.preventDefault()
-        const date = new Date()
-        const time= date.toLocaleTimeString()
-        const presentDate = date.toLocaleDateString()
+        const today = new Date()
+        const week = Math.ceil((today.getDate() - today.getDay()) / 7)
+        const month = today.getMonth()
+        const day = today.getDate()
+        const presentDate = today.toLocaleDateString()
         const form = event.target
         const taskName = form.task_name.value 
         const iconURL = form.icon_url.value 
         const task = {
             taskName,
             iconURL,
-            time, 
             presentDate,
-            isDone: false
+            isDone: false,
+            year:`${today.getFullYear()}`,
+            week: `${week}`,
+            month: `${month}`,
+            day: `${day}`
         }
         fetch('http://localhost:5000/addtask', {
             method: 'POST',
