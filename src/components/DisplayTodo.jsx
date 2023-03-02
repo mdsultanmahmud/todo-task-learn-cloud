@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { AiFillEdit } from 'react-icons/ai'
 import { RiDeleteBin6Line } from 'react-icons/ri'
+import Modal from './Modal';
 const DisplayTodo = ({ prop }) => {
     const { dataHandle, setDataHandle, todos, setTodos } = prop
+    const [editTodo, setEditTodo] = useState({})
     let [url, setUrl] = useState(`http://localhost:5000/getAllTask`)
     const handleSelected = (e) => {
         const today = new Date()
@@ -84,7 +86,8 @@ const DisplayTodo = ({ prop }) => {
                                         <th>Icon</th>
                                         <th>Name</th>
                                         <th>Added Date</th>
-                                        <th>Action</th>
+                                        <th>Edit</th>
+                                        <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -111,14 +114,19 @@ const DisplayTodo = ({ prop }) => {
                                                     <p>{todo.taskName}</p>
                                                 </td>
                                                 <td>{todo.presentDate}</td>
+                                                <td><label onClick={()=> setEditTodo(todo)} htmlFor="my-modal-3" className='inline-block p-2 bg-base-300 hover:bg-[#FF5733] hover:text-white font-bold cursor-pointer'><AiFillEdit size={22} /></label></td>
                                                 <td>
-                                                    <button className='p-2 bg-base-300 hover:bg-[#FF5733] mr-2 hover:text-white font-bold'><AiFillEdit size={22} /></button>
+                                                    
                                                     <button onClick={() => handleDelete(todo._id)} className='p-2 bg-base-300 hover:bg-[#FF5733] hover:text-white font-bold'><RiDeleteBin6Line size={22} /></button>
                                                 </td>
                                             </tr>
                                         ))
                                     }
                                 </tbody>
+                                {
+                                    editTodo && 
+                                    <Modal editTodo = {editTodo}></Modal>
+                                }
                             </table>
                         </div>
                     </> :
