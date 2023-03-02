@@ -1,9 +1,32 @@
 import React from 'react';
-
-const Modal = ({ editTodo }) => {
-    console.log(editTodo.taskName)
+import toast from 'react-hot-toast'
+const Modal = ({ prop }) => {
+    const { editTodo, dataHandle, setDataHandle } = prop
     const editTask = (e) => {
         e.preventDefault()
+        const form = e.target
+        const taskName = form.task_name.value
+        const iconURL = form.icon_url.value
+        const EditedTask = {
+            taskName,
+            iconURL
+        }
+        fetch(`http://localhost:5000/editedTask/${editTodo._id}`, {
+            method: 'PATCH',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(EditedTask)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data)
+                if (data.modifiedCount) {
+                    toast.success('Your Task Modified!')
+                    form.reset()
+                    setDataHandle(!dataHandle)
+                }
+            })
     }
     return (
         <div>
@@ -19,7 +42,7 @@ const Modal = ({ editTodo }) => {
                             <br />
                         </div>
                         <div className="modal-action">
-                            <label htmlFor="my-modal-3" className='bg-[#FF5733] px-4 py-3 rounded text-white text-xl font-bold mt-2 cursor-pointer'>Edit Task</label>
+                            <button type='subit'><label htmlFor="my-modal-3" className='bg-[#FF5733] px-4 py-3 rounded text-white text-xl font-bold mt-2 cursor-pointer'>Edit Task</label></button>
                         </div>
                     </form>
                 </div>

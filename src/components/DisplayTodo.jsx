@@ -125,7 +125,7 @@ const DisplayTodo = ({ prop }) => {
                                 </tbody>
                                 {
                                     editTodo && 
-                                    <Modal editTodo = {editTodo}></Modal>
+                                    <Modal prop = {{editTodo,dataHandle, setDataHandle}}></Modal>
                                 }
                             </table>
                         </div>

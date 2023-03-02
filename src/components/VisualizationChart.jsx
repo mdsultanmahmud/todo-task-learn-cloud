@@ -3,8 +3,6 @@ import { LineChart, Line, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 const VisualizationChart = ({prop}) => {
     const {todos} = prop 
-    console.log(todos)
-    console.log(todos.length)
     const data = [
         { name: 'Page A', uv: todos.length}
     ];
